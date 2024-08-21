@@ -1,10 +1,12 @@
 // implement your server here
 // require your posts router and connect it here
 const express = require('express');  // Import the Express module
-
+const postsRouter = require('./posts/posts-router')
 const server = express();  // Initialize an Express application
 
 server.use(express.json());  // Middleware to parse JSON request bodies
+
+server.use('/api/posts', postsRouter)
 
 // Fallback route to handle undefined routes
 server.use('*', (req, res) => {

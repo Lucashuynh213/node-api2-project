@@ -38,20 +38,30 @@ router.get('/:id', async (req, res) => {
     }
 });
 router.post('/', (req,res) => {
-    const newPost = req.body;
+    const {title,contents} = req.body;
 
-    Post.create(newPost)
-        .then(createNewPost =>{
-            res.status(201).json(createNewPost);
+    if (!title || !contents) {
+        return res.status(400).json({
+            message: "Please provide title and content for the post",
+        });
+    } else {
+        Post.insert({title, contents})
+        .then(({id}) => {
+            return Post.findById(id)
+        })
+        .then(post => {
+            res.status(201).json(post)
         })
         .catch(err => {
-            res.status(400).json({
-                message: "Please provide title and contents for the post",
+            res.status(500).json({
+                message: "The posts information could not be retrieved",
                 error: err.message,
                 stack: err.stack,
-            })
         })
-})
+        })
+    }
+});
+
 router.put('/:id', (req,res) => {
     const {id} = req.params;
     const newUpdate = req.body;

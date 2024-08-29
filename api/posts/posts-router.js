@@ -86,14 +86,14 @@ router.put("/:id", (req, res) => {
 });
 router.delete("/:id", async (req, res) => {
   try {
-    const maybe = await Post.findById(req.params.id)
-    if(!maybe) {
+    const post = await Post.findById(req.params.id)
+    if(!post) {
         res.status(404).json({
             message: 'The post with the specified ID does not exist',
         })
     }else{
-        const stuff = await Post.remove(req.params.id)
-        console.log(stuff)
+        await Post.remove(req.params.id)
+        res.json(post)
     }
   } catch (err) {
     res.status(500).json({
